@@ -30,14 +30,6 @@ public class EnemyHealthController : MonoBehaviour
         SetEnemyHealthBeginingValue();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(18f);
-        }
-    }
-
     public void SetEnemyHealthBeginingValue()
     {
         _currentHealth = _enemyTypeSO.MaxHealth;
