@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TowerUIManager : MonoBehaviour
+public class TowerButtonsUIManager : MonoBehaviour
 {
     [SerializeField] private Transform _towerButtonContainer;
     [SerializeField] private Button _towerButtonPrefab;

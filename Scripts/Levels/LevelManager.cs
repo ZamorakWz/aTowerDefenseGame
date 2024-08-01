@@ -5,13 +5,15 @@ using System;
 
 public class LevelManager : MonoBehaviour
 {
+    public static Action<int> OnRemainingTimeChanged;
+
     [SerializeField] private WaveManager _waveManager;
     [SerializeField] private int _timeBetweenWaves = 10;
 
     private void OnEnable()
     {
-        _waveManager.OnWaveCompleted += HandleWaveEnd;
-        _waveManager.OnAllWavesCompleted += HandleEndLevel;
+        WaveManager.OnWaveCompleted += HandleWaveEnd;
+        WaveManager.OnAllWavesCompleted += HandleEndLevel;
     }
 
     private void Start()
@@ -21,8 +23,8 @@ public class LevelManager : MonoBehaviour
 
     private void OnDisable()
     {
-        _waveManager.OnWaveCompleted -= HandleWaveEnd;
-        _waveManager.OnAllWavesCompleted -= HandleEndLevel;
+        WaveManager.OnWaveCompleted -= HandleWaveEnd;
+        WaveManager.OnAllWavesCompleted -= HandleEndLevel;
     }
 
     public void StartLevel()
@@ -53,7 +55,7 @@ public class LevelManager : MonoBehaviour
 
         while (remainingTime >= 0)
         {
-            InGameUIManager.Instance.UpdateTimeToNextWave(remainingTime);
+            OnRemainingTimeChanged?.Invoke(remainingTime);
 
             yield return new WaitForSeconds(1f);
             remainingTime--;

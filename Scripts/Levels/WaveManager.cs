@@ -7,8 +7,9 @@ using UnityEngine.Events;
 public class WaveManager : MonoBehaviour
 {
 
-    public event Action OnWaveCompleted;
-    public event Action OnAllWavesCompleted;
+    public static event Action OnWaveCompleted;
+    public static event Action OnAllWavesCompleted;
+    public static event Action<int, int> OnWaveCountChanged;
 
     [Header("How Many Waves For This Level")]
     [SerializeField] private List<WaveConfig> waveConfigs = new List<WaveConfig>();
@@ -18,12 +19,12 @@ public class WaveManager : MonoBehaviour
 
     private void OnEnable()
     {
-        _enemySpawnController.OnAllEnemiesDefeated += HandleWaveCompleted;
+        EnemySpawnController.OnAllEnemiesDefeated += HandleWaveCompleted;
     }
 
     private void OnDisable()
     {
-        _enemySpawnController.OnAllEnemiesDefeated -= HandleWaveCompleted;
+        EnemySpawnController.OnAllEnemiesDefeated -= HandleWaveCompleted;
     }
 
     public void StartWave()
@@ -32,7 +33,7 @@ public class WaveManager : MonoBehaviour
         {
             StartCoroutine(SpawnEnemiesForWave(waveConfigs[_currentWaveIndex]));
             _currentWaveIndex++;
-            InGameUIManager.Instance.UpdateCurrentWave(waveConfigs.Count, _currentWaveIndex);
+            OnWaveCountChanged?.Invoke(waveConfigs.Count, _currentWaveIndex);
         }
         else
         {

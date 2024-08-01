@@ -7,7 +7,8 @@ using static EnemySpawnController;
 
 public class EnemySpawnController : MonoBehaviour
 {
-    public event Action OnAllEnemiesDefeated;
+    public static event Action OnAllEnemiesDefeated;
+    public static event Action<int> OnEnemySpawned;
 
     [Header("Spawn Position of Enemy")]
     [SerializeField] private Vector3 _spawnPosition;
@@ -24,7 +25,7 @@ public class EnemySpawnController : MonoBehaviour
         { 
             _aliveEnemyCount = Mathf.Max(0, value);
 
-            InGameUIManager.Instance.UpdateAliveEnemyCount(_aliveEnemyCount);
+            OnEnemySpawned?.Invoke(_aliveEnemyCount);
 
             if (_aliveEnemyCount == 0)
             {
