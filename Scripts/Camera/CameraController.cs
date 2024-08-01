@@ -42,10 +42,8 @@ public class CameraController : MonoBehaviour
 
         Vector3 forward = _cam.transform.forward.normalized;
         forward.y = 0;
-        //forward.Normalize();
         Vector3 right = _cam.transform.right.normalized;
         right.y = 0;
-        //right.Normalize();
 
         Vector3 movement = (forward * vertical + right * horizontal) * _moveSpeed * Time.deltaTime;
 

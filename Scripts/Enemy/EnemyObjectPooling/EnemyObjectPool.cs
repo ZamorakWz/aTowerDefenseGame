@@ -4,22 +4,6 @@ using UnityEngine;
 
 public class EnemyObjectPool : MonoBehaviour
 {
-    [System.Serializable]
-    public struct Pool
-    {
-        public Queue<GameObject> _pooledEnemies;
-        public GameObject _enemyPrefab;
-        public int _pooledEnemySize;
-    }
-
-    public enum EnemyType
-    {
-        GreenEnemy,
-        BlueEnemy,
-        RedEnemy,
-        WhiteEnemy
-    }
-
     [SerializeField] private Pool[] _pools = null;
 
     private void Awake()
@@ -51,10 +35,26 @@ public class EnemyObjectPool : MonoBehaviour
         obj.SetActive(true);
 
         obj.GetComponent<EnemyMovement>().SetEnemyWaypointIndexBeginingValue();
-        obj.GetComponent<EnemyHealthController>().SetEnemyHealthBeginingValue();
+        obj.GetComponent<EnemyHealthController>().SetEnemyHealthBeginningValue();
 
         _pools[enemyTypeIndex]._pooledEnemies.Enqueue(obj);
 
         return obj;
+    }
+
+    [System.Serializable]
+    public struct Pool
+    {
+        public Queue<GameObject> _pooledEnemies;
+        public GameObject _enemyPrefab;
+        public int _pooledEnemySize;
+    }
+
+    public enum EnemyType
+    {
+        GreenEnemy,
+        BlueEnemy,
+        RedEnemy,
+        WhiteEnemy
     }
 }

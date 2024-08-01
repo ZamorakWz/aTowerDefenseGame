@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,11 @@ using UnityEngine.Events;
 
 public class EnemyHealthController : MonoBehaviour
 {
+    [System.NonSerialized]
+    public UnityEvent<float> OnHealthChanged;
+
+    private EnemySpawnController _enemySpawnController;
+
     [SerializeField] private EnemyTypeSO _enemyTypeSO;
 
     [SerializeField] private float _currentHealth;
@@ -15,7 +21,11 @@ public class EnemyHealthController : MonoBehaviour
         set { _currentHealth = value; }
     }
 
-    public UnityEvent<float> OnHealthChanged;
+    private void Awake()
+    {
+        SetEnemyHealthBeginningValue();
+        _enemySpawnController = FindObjectOfType<EnemySpawnController>();
+    }
 
     private void OnEnable()
     {
@@ -25,12 +35,15 @@ public class EnemyHealthController : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void Update()
     {
-        SetEnemyHealthBeginingValue();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TakeDamage(28f);
+        }
     }
 
-    public void SetEnemyHealthBeginingValue()
+    public void SetEnemyHealthBeginningValue()
     {
         _currentHealth = _enemyTypeSO.MaxHealth;
     }
@@ -44,15 +57,15 @@ public class EnemyHealthController : MonoBehaviour
             Die();
         }
 
-        Debug.Log("Damage taken!");
+        Debug.Log("Damage is taken!");
 
         OnHealthChanged.Invoke(_currentHealth);
     }
 
-    private void Die()
+    public void Die()
     {
         gameObject.SetActive(false);
 
-        //add back to the queue
+        _enemySpawnController.AliveEnemyCount--;
     }
 }

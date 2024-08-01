@@ -8,7 +8,9 @@ public class EnemyTypeSO : ScriptableObject
     public string typeName = "None";
     [SerializeField] private float _typeSpeed;
     [SerializeField] private float _typeMaxHealth;
+    [SerializeField] private int _typeDamage;
 
     public float MaxHealth => _typeMaxHealth;
     public float Speed => _typeSpeed;
+    public int Damage => _typeDamage;
 }
