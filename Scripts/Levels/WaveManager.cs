@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,12 +11,14 @@ public class WaveManager : MonoBehaviour
     public static event Action OnWaveCompleted;
     public static event Action OnAllWavesCompleted;
     public static event Action<int, int> OnWaveCountChanged;
+    public static Action<int> OnRemainingTimeChanged;
 
     [Header("How Many Waves For This Level")]
     [SerializeField] private List<WaveConfig> waveConfigs = new List<WaveConfig>();
-    [SerializeField] private EnemySpawnController _enemySpawnController;
 
+    [SerializeField] private EnemySpawnController _enemySpawnController;
     [SerializeField] private int _currentWaveIndex = 0;
+    [SerializeField] private int _totalTimeBetweenWaves = 10;
 
     private void OnEnable()
     {
@@ -25,6 +28,14 @@ public class WaveManager : MonoBehaviour
     private void OnDisable()
     {
         EnemySpawnController.OnAllEnemiesDefeated -= HandleWaveCompleted;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartWave();
+        }
     }
 
     public void StartWave()
@@ -44,7 +55,24 @@ public class WaveManager : MonoBehaviour
 
     private void HandleWaveCompleted()
     {
-        OnWaveCompleted.Invoke();
+        OnWaveCompleted?.Invoke();
+        NextWaveWithDelayAsync().Forget();
+        Debug.Log("Current Wave Completed!");
+    }
+
+    private async UniTaskVoid NextWaveWithDelayAsync()
+    {
+        int remainingTime = _totalTimeBetweenWaves;
+
+        while (remainingTime >= 0)
+        {
+            OnRemainingTimeChanged?.Invoke(remainingTime);
+
+            await UniTask.Delay(1000);
+            remainingTime--;
+        }
+
+        StartWave();
     }
 
     private IEnumerator SpawnEnemiesForWave(WaveConfig waveConfig)
