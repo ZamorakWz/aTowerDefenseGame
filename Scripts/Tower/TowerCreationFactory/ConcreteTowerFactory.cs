@@ -17,10 +17,6 @@ public class ConcreteTowerFactory : ITowerFactory
     {
         GameObject towerObject = UnityEngine.Object.Instantiate (_towerPrefab, position, Quaternion.identity);
         AbstractBaseTower tower = towerObject.GetComponent<AbstractBaseTower>();
-        if (tower != null)
-        {
-            tower.Initialize(_towerData);
-        }
         return tower;
     }
 }

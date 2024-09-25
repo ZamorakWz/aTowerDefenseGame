@@ -4,5 +4,7 @@ using UnityEngine;
 
 public interface ITargetSelectionStrategy
 {
-    IAttackable SelectTarget(List<IAttackable> targets, Vector3 towerPosition);
+    //IAttackable SelectTarget(List<IAttackable> targets, Vector3 towerPosition);
+
+    IEnumerable<IAttackable> SelectTargets(List<IAttackable> targets, Vector3 towerPosition);
 }

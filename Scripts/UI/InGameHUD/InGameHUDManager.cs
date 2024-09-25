@@ -11,6 +11,7 @@ public class InGameHUDManager : MonoBehaviour, IInGameHUD
     [SerializeField] private TextMeshProUGUI _currentWave;
     [SerializeField] private TextMeshProUGUI _aliveEnemyCount;
     [SerializeField] private TextMeshProUGUI _timeToNextWave;
+    [SerializeField] private TextMeshProUGUI _goldText;
 
     private void Awake()
     {
@@ -54,6 +55,11 @@ public class InGameHUDManager : MonoBehaviour, IInGameHUD
         _timeToNextWave.text = $"Time To Next Wave: {time}";
     }
 
+    public void HandleGoldUIUpdate(int amount)
+    {
+        _goldText.text = $"Gold: {amount}";
+    }
+
     private void SubscribeEvents()
     {
         try
@@ -62,6 +68,7 @@ public class InGameHUDManager : MonoBehaviour, IInGameHUD
             WaveManager.OnWaveCountChanged += HandleCurrentWave;
             WaveManager.OnRemainingTimeChanged += HandleRemainingTimeToNextWave;
             EnemySpawnController.OnEnemyCountChanged += HandleAliveEnemyCount;
+            GoldManager.OnGoldChanged += HandleGoldUIUpdate;
         }
         catch (System.Exception e)
         {
@@ -77,6 +84,7 @@ public class InGameHUDManager : MonoBehaviour, IInGameHUD
             WaveManager.OnWaveCountChanged -= HandleCurrentWave;
             WaveManager.OnRemainingTimeChanged -= HandleRemainingTimeToNextWave;
             EnemySpawnController.OnEnemyCountChanged -= HandleAliveEnemyCount;
+            GoldManager.OnGoldChanged -= HandleGoldUIUpdate;
         }
         catch (System.Exception e)
         {

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EnemyHealthController : MonoBehaviour, IAttackable
+public class EnemyHealthController : MonoBehaviour, IAttackable, IHealthProvider
 {
-    public static Action<float> OnHealthChanged;
+    public Action<float> OnHealthChanged;
     public static Action<EnemyHealthController> OnEnemyDied;
 
     private EnemySpawnController _enemySpawnController;
@@ -24,7 +24,7 @@ public class EnemyHealthController : MonoBehaviour, IAttackable
 
     private void Awake()
     {
-        SetEnemyHealthBeginningValue();
+        //SetEnemyHealthBeginningValue();
         _enemySpawnController = FindObjectOfType<EnemySpawnController>();
     }
 
@@ -35,7 +35,7 @@ public class EnemyHealthController : MonoBehaviour, IAttackable
 
     public void SetEnemyHealthBeginningValue()
     {
-        _currentHealth = _enemyTypeSO.MaxHealth;
+        _currentHealth = _enemyTypeSO.typeMaxHealth;
     }
 
     public void TakeDamage(float amount)
@@ -47,7 +47,7 @@ public class EnemyHealthController : MonoBehaviour, IAttackable
             Die();
         }
 
-        Debug.Log("Damage is taken!");
+        Debug.Log($"{amount} damage is taken!");
 
         OnHealthChanged?.Invoke(_currentHealth);
     }
@@ -63,11 +63,12 @@ public class EnemyHealthController : MonoBehaviour, IAttackable
         gameObject.SetActive(false);
 
         _enemySpawnController.AliveEnemyCount--;
+
+        GoldManager.Instance.AddGold(_enemyTypeSO.typeGold);
     }
 
-    public Vector3 GetPosition()
+    public float GetHealth()
     {
-        Vector3 currentPosition = gameObject.transform.position;
-        return currentPosition;
+        return CurrentHealth;
     }
 }

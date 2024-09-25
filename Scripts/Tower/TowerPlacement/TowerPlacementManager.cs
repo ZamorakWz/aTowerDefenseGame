@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class TowerPlacementManager : MonoBehaviour
 {
@@ -28,10 +29,6 @@ public class TowerPlacementManager : MonoBehaviour
             {
                 PlaceTower();
             }
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            RemoveTower();
         }
     }
 
@@ -66,28 +63,37 @@ public class TowerPlacementManager : MonoBehaviour
     {
         if (isCanPlaceHere && TryGetPlacementPosition(out Vector3? hitPoint))
         {
-            _selectedTowerPrefab.transform.position = hitPoint.Value;
-            OnTowerPlaced?.Invoke(_selectedTowerPrefab);
-            _selectedTowerPrefab = null;
+            if (_selectedTowerPrefab != null)
+            {
+                _selectedTowerPrefab.transform.position = hitPoint.Value;
+
+                if (_selectedTowerPrefab != null)
+                {
+                    OnTowerPlaced?.Invoke(_selectedTowerPrefab);
+                }
+
+                _selectedTowerPrefab = null;
+            }
+
         }
     }
 
-    private void RemoveTower()
-    {
-        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
-        {
-            BoxCollider boxCollider = hit.collider as BoxCollider;
-            if (boxCollider != null)
-            {
-                GameObject towerToRemove = hit.collider.gameObject;
-                if (towerToRemove.CompareTag("Tower"))
-                {
-                    Destroy(towerToRemove);
-                }
-            }
-        }
-    }
+    //private void RemoveTower()
+    //{
+    //    Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+    //    if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+    //    {
+    //        BoxCollider boxCollider = hit.collider as BoxCollider;
+    //        if (boxCollider != null)
+    //        {
+    //            GameObject towerToRemove = hit.collider.gameObject;
+    //            if (towerToRemove.CompareTag("Tower"))
+    //            {
+    //                Destroy(towerToRemove);
+    //            }
+    //        }
+    //    }
+    //}
 
     private bool TryGetPlacementPosition(out Vector3? hitPoint)
     {

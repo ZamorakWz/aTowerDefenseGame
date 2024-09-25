@@ -8,4 +8,5 @@ public interface ITargetDetector
     List<IAttackable> GetTargetsInRange();
     void AddTarget(IAttackable target);
     void RemoveTarget(IAttackable target);
+    void UpdateRange(float newRange);
 }

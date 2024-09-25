@@ -8,4 +8,5 @@ public interface IInGameHUD
     void HandleBaseHealth(int maxHealth, int currentHealth);
     void HandleCurrentWave(int currentWave, int maxValue);
     void HandleRemainingTimeToNextWave(int time);
+    void HandleGoldUIUpdate(int amount);
 }

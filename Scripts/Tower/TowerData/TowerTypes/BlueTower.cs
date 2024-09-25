@@ -6,13 +6,16 @@ public class BlueTower : AbstractBaseTower
 {
     //AOE Attacker Tower
 
+    [SerializeField] private ParticleSystem aoeEffectPrefab;
+
     protected override void InitializeAttackStrategy()
     {
-        attackStrategy = new AOEAttackStrategy(towerData.towerAOERadius);
+        IAOEEffectStrategy effectStrategy = new AOEEffectStrategy(aoeEffectPrefab);
+        attackStrategy = new AOEAttackStrategy(towerData.towerAOERadius, effectStrategy);
     }
 
     protected override void InitializeTargetSelectionStrategy()
     {
-        targetSelectionStrategy = new NearestTargetStrategy();
+        targetSelectionStrategy = new NearestTarget();
     }
 }

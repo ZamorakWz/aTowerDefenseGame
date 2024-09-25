@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class TowerRangeVisualizer : MonoBehaviour
+public class TowerRangeVisualizer : MonoBehaviour, ITowerRangeUpdater
 {
     private float _towerRange;
     private LineRenderer _lineRenderer;
@@ -31,7 +31,7 @@ public class TowerRangeVisualizer : MonoBehaviour
     {
         if (tower == gameObject)
         {
-            UpdateRangeVisualization();
+            HandleRangeVisualization();
             DrawRangeCircle();
             ToggleRangeVisualization(true);
         }
@@ -51,7 +51,7 @@ public class TowerRangeVisualizer : MonoBehaviour
         _lineRenderer.enabled = _showRange;
     }
 
-    private void UpdateRangeVisualization()
+    private void HandleRangeVisualization()
     {
         TowerTypeSO towerData = gameObject.GetComponent<AbstractBaseTower>().GetTowerData();
         if (towerData != null)
@@ -81,8 +81,9 @@ public class TowerRangeVisualizer : MonoBehaviour
         _lineRenderer.enabled = _showRange;
     }
 
-    public void HandleTowerRangeOnUpgrade()
+    public void UpdateTowerRangeVisualization(float newTowerRange)
     {
-        UpdateRangeVisualization();
+        _towerRange = newTowerRange;
+        DrawRangeCircle();
     }
 }

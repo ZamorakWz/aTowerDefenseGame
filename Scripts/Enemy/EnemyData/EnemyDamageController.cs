@@ -11,7 +11,7 @@ public class EnemyDamageController : MonoBehaviour
     private void Start()
     {
         _healthController = GetComponent<EnemyHealthController>();
-        _damage = _enemyTypeSO.Damage;
+        _damage = _enemyTypeSO.typeDamage;
     }
 
     private void OnTriggerEnter(Collider other)

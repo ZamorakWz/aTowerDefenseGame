@@ -4,6 +4,8 @@ using UnityEngine;
 
 public interface IAttackManager
 {
-    void Attack(IAttackable attackable);
+    void Attack(IEnumerable<IAttackable> targets);
     bool CanAttack();
+    void UpdateDamage(float newDamage);
+    void UpdateFireRate(float newFireRate);
 }

@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class EnemyObjectPool : MonoBehaviour
 {
     [SerializeField] private Pool[] _pools = null;
 
+    [Inject] private DiContainer _container;
     private void Awake()
     {
         for (int j = 0; j < _pools.Length; j++)

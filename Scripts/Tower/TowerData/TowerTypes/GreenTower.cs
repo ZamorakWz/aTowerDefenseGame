@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,6 @@ public class GreenTower : AbstractBaseTower
 
     protected override void InitializeTargetSelectionStrategy()
     {
-        targetSelectionStrategy = new NearestTargetStrategy();
+        targetSelectionStrategy = new NearestTarget();
     }
 }

@@ -6,11 +6,8 @@ public class EnemyTypeSO : ScriptableObject
 {
     public GameObject typePrefab;
     public string typeName = "None";
-    [SerializeField] private float _typeSpeed;
-    [SerializeField] private float _typeMaxHealth;
-    [SerializeField] private int _typeDamage;
-
-    public float MaxHealth => _typeMaxHealth;
-    public float Speed => _typeSpeed;
-    public int Damage => _typeDamage;
+    public float typeSpeed;
+    public float typeMaxHealth;
+    public int typeDamage;
+    public int typeGold;
 }

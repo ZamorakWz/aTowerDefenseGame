@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Zenject;
 
 public class SphereTargetDetector : MonoBehaviour, ITargetDetector
 {
     private SphereCollider _detectionCollider;
-    [SerializeField] private List<IAttackable> _targetsInRange = new List<IAttackable>();
+    //[SerializeField] private List<IAttackable> _targetsInRange = new List<IAttackable>();
+    [SerializeField] private HashSet<IAttackable> _targetsInRange = new HashSet<IAttackable>();
 
     private void OnEnable()
     {
@@ -20,52 +22,66 @@ public class SphereTargetDetector : MonoBehaviour, ITargetDetector
 
     public void InitializeTargetDetector(float detectionRadius)
     {
-        _detectionCollider = gameObject.GetComponent<SphereCollider>();
+        _detectionCollider = gameObject.GetComponentInChildren<SphereCollider>();
         _detectionCollider.radius = detectionRadius;
         _detectionCollider.isTrigger = true;
     }
 
+    public void UpdateRange(float newRange)
+    {
+        _detectionCollider.radius = newRange;
+    }
+
     public List<IAttackable> GetTargetsInRange()
     {
-        return _targetsInRange;
+        //return _targetsInRange;
+        return new List<IAttackable>(_targetsInRange);
     }
 
     public void AddTarget(IAttackable target)
     {
-        if (!_targetsInRange.Contains(target))
-        {
-            _targetsInRange.Add(target);
-        }
+        //if (!_targetsInRange.Contains(target))
+        //{
+        //    _targetsInRange.Add(target);
+        //}
+
+        _targetsInRange.Add(target);
     }
 
     public void RemoveTarget(IAttackable target)
     {
-        if (_targetsInRange.Contains(target))
-        {
-            _targetsInRange.Remove(target);
-        }
+        //if (_targetsInRange.Contains(target))
+        //{
+        //    _targetsInRange.Remove(target);
+        //}
+
+        _targetsInRange.Remove(target);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        IAttackable attackable = other.GetComponent<IAttackable>();
-        if (attackable != null)
+        EnemyComposite target = other.GetComponent<EnemyComposite>();
+        if (target != null)
         {
-            AddTarget(attackable);
+            AddTarget(target);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        IAttackable attackable = other.GetComponent<IAttackable>();
-        if (attackable != null)
+        EnemyComposite target = other.GetComponent<EnemyComposite>();
+        if (target != null)
         {
-            RemoveTarget(attackable);
+            RemoveTarget(target);
         }
     }
 
     private void HandleEnemyDied(EnemyHealthController enemy)
     {
-        RemoveTarget(enemy);
+        EnemyComposite target = enemy.GetComponent<EnemyComposite>();
+        if (target != null)
+        {
+            RemoveTarget(target);
+        }
     }
 }

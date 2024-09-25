@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovement : MonoBehaviour, IPositionProvider, ISpeedProvider
 {
     private EnemyWaypointPath _waypointPath;
 
@@ -16,14 +16,20 @@ public class EnemyMovement : MonoBehaviour
 
     private Vector3 _currentDirection;
 
-    [SerializeField] private float _speed;
+    private float _speed;
     [SerializeField] private EnemyTypeSO _enemyType;
+
+    public float Speed
+    {
+        get { return _speed; }
+        set { _speed = value; }
+    }
 
     void Start()
     {
         _waypointPath = FindObjectOfType<EnemyWaypointPath>();
 
-        _speed = _enemyType.Speed;
+        Speed = _enemyType.typeSpeed;
     }
 
     void Update()
@@ -50,5 +56,15 @@ public class EnemyMovement : MonoBehaviour
     public void SetEnemyWaypointIndexBeginingValue()
     {
         CurrentWaypointIndex = 0;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return gameObject.transform.position;
+    }
+
+    public float GetSpeedValue()
+    {
+        return Speed;
     }
 }

@@ -24,13 +24,17 @@ public class OverlapValidator : MonoBehaviour
 
         foreach (var collider in colliders)
         {
-            if (collider.GetComponent<AbstractBaseTower>() != null && collider.gameObject != selectedTower)
+            if (collider is SphereCollider && collider.gameObject.layer == LayerMask.NameToLayer("TargetDetection"))
             {
-                Debug.Log($"Overlapping detected with tower: {collider.gameObject.name}");
-                return false;
+                var baseTower = collider.GetComponentInParent<AbstractBaseTower>();
+
+                if (baseTower != null && baseTower.gameObject != selectedTower)
+                {
+                    Debug.Log($"Overlapping detected with tower: {baseTower.gameObject.name}");
+                    return false;
+                }
             }
         }
-
         return true;
     }
 }

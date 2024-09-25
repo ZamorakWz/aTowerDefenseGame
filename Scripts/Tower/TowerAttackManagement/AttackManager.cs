@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackManager : IAttackManager
 {
-    private readonly IAttackStrategy _attackStrategy;
-    private readonly float _fireRate;
-    private readonly float _damage;
+    private IAttackStrategy _attackStrategy;
+    private float _fireRate;
+    private float _damage;
     private float _lastAttackTime;
     private Transform _firePoint;
 
@@ -14,14 +15,27 @@ public class AttackManager : IAttackManager
         _attackStrategy = attackStrategy;
         _fireRate = fireRate;
         _damage = damage;
-        _firePoint = firePoint ?? throw new ArgumentNullException(nameof(firePoint));
+        _firePoint = firePoint;
     }
 
-    public void Attack(IAttackable target)
+    public void UpdateDamage(float newDamage)
+    {
+        _damage = newDamage;
+    }
+    
+    public void UpdateFireRate(float newFireRate)
+    {
+        _fireRate = newFireRate;
+    }
+
+    public void Attack(IEnumerable<IAttackable> targets)
     {
         if (CanAttack())
         {
-            FireBullet(target);
+            foreach (var target in targets)
+            {
+                FireBullet(target);
+            }
             _lastAttackTime = Time.time;
         }
     }

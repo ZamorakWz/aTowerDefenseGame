@@ -2,36 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class EnemyUIController : MonoBehaviour
 {
-    [SerializeField] private Slider _slider;
-    [SerializeField] private EnemyTypeSO _enemyTypeSO;
+    [SerializeField] private Image healthImage;
+    [SerializeField] private EnemyTypeSO enemyTypeSO;
+
+    private float maxHealth;
+
+    private EnemyHealthController healthController;
 
     private void Awake()
     {
-        EnemyHealthController.OnHealthChanged += HandleOnEnemyHealthChanged;
+        healthController = GetComponent<EnemyHealthController>();
     }
 
-    void Start()
+    private void OnEnable()
     {
-        SetSliderMinMaxValue();
+        healthController.OnHealthChanged += HandleOnEnemyHealthChanged;
+
+        UpdateHealthUI(enemyTypeSO.typeMaxHealth);
+
+        maxHealth = enemyTypeSO.typeMaxHealth;
     }
 
     private void OnDisable()
     {
-        EnemyHealthController.OnHealthChanged -= HandleOnEnemyHealthChanged;
+        healthController.OnHealthChanged -= HandleOnEnemyHealthChanged;
     }
 
-    public void HandleOnEnemyHealthChanged(float value)
+    public void HandleOnEnemyHealthChanged(float currentHealth)
     {
-        Debug.Log($"Slider value changed to: {value}");
-        _slider.value = value;
+        UpdateHealthUI(currentHealth);
     }
 
-    private void SetSliderMinMaxValue()
+    private void UpdateHealthUI(float currentHealth)
     {
-        _slider.minValue = 0;
-        _slider.maxValue = _enemyTypeSO.MaxHealth;
+        float healthPercentage = currentHealth / maxHealth;
+
+        healthImage.fillAmount = Mathf.Clamp01(healthPercentage);
+
+        Debug.Log($"Health changed: {currentHealth}/{maxHealth}, Fill amount: {healthImage.fillAmount}");
     }
 }
